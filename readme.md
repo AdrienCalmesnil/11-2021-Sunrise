@@ -1,4 +1,4 @@
-# Three.js Spinning rings animation
+# Three.js Sunrise animation
 Courtesy of Bruno Simon of https://threejs-journey.xyz/
 
 ## Setup
