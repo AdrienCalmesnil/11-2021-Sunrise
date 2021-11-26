@@ -3,15 +3,12 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 import { DoubleSide, PointLightHelper } from 'three'
-import { EffectComposer } from 'C:/Users/AdrienCALMESNIL/Web/sun-laboratory/node_modules/three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'C:/Users/AdrienCALMESNIL/Web/sun-laboratory/node_modules/three/examples/jsm/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from 'C:/Users/AdrienCALMESNIL/Web/sun-laboratory/node_modules/three/examples/jsm/postprocessing/UnrealBloomPass.js'
 
 
 // Loading
 const textureLoader = new THREE.TextureLoader()
-// const sunTexture = textureLoader.load('...')
-const normalTexture = textureLoader.load('/textures/NormalMap.png')
+const texture = textureLoader.load('/textures/space.jpg')
+// const normalTexture = textureLoader.load('/textures/MarsNormalMap.png')
 
 // Debug
 const gui = new dat.GUI()
@@ -22,18 +19,20 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+scene.background = texture
 
 // Objects
-const geometry = new THREE.SphereGeometry( 8, 32, 16 );
-const boxGeometry = new THREE.BoxGeometry( 5, 1, 20 );
+const geometry = new THREE.SphereGeometry( 38, 64, 32 );
+const boxGeometry = new THREE.BoxGeometry( 7, 1, 20 );
 
 // Materials
 
-const material = new THREE.MeshStandardMaterial()
+const material = new THREE.MeshPhongMaterial()
 material.color = new THREE.Color(0xFF162F)
+// material.flatShading = true
 // material.emissive = new THREE.Color(0xFF162F)
-// material.specular = new THREE.Color(0xFF162F)
-// material.shininess = 0
+material.specular = new THREE.Color(0xFF162F)
+material.shininess = 0
 
 const dockMaterial = new THREE.MeshStandardMaterial()
 dockMaterial.color = new THREE.Color(0x1C1C1C)
@@ -44,8 +43,8 @@ const box = new THREE.Mesh(boxGeometry, dockMaterial)
 scene.add(sphere, box)
 
 // Position
-sphere.position.set(0, -2, -20)
-box.position.set(0, -1, 2)
+sphere.position.set(0, 2, -60)
+box.position.set(0, -1.6, 2)
 
 
 
@@ -63,7 +62,7 @@ const light2 = gui.addFolder('Light 2')
 
 light2.add(pointLight2.position, 'y').min(-3).max(3).step(0.01)
 light2.add(pointLight2.position, 'x').min(-6).max(6).step(0.01)
-light2.add(pointLight2.position, 'z').min(-10).max(3).step(0.01)
+light2.add(pointLight2.position, 'z').min(-100).max(3).step(0.01)
 light2.add(pointLight2, 'intensity').min(0).max(20).step(0.01)
 
 const light2Color = { color : 0xFF165C }
@@ -73,8 +72,30 @@ light2.addColor(light2Color, 'color')
         pointLight2.color.set(light2Color.color)
     })
 
-// const pointLight2Helper = new THREE.PointLightHelper(pointLight2)
-// scene.add(pointLight2Helper)
+const pointLight2Helper = new THREE.PointLightHelper(pointLight2)
+scene.add(pointLight2Helper)
+
+// Light 3
+const pointLight3 = new THREE.PointLight(0xFF165C, 12.75)
+pointLight3.position.set(.32, .23, -10)
+scene.add(pointLight3)
+
+const light3 = gui.addFolder('Light 3')
+
+light3.add(pointLight3.position, 'y').min(-30).max(30).step(0.01)
+light3.add(pointLight3.position, 'x').min(-30).max(30).step(0.01)
+light3.add(pointLight3.position, 'z').min(-60).max(3).step(0.01)
+light3.add(pointLight3, 'intensity').min(0).max(20).step(0.01)
+
+const light3Color = { color : 0xFF165C }
+
+light3.addColor(light3Color, 'color')
+    .onChange(() => {
+        pointLight3.color.set(light3Color.color)
+    })
+
+const pointLight3Helper = new THREE.PointLightHelper(pointLight3)
+scene.add(pointLight3Helper)
 
 
 /**
