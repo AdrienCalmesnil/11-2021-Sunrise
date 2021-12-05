@@ -3,30 +3,59 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 import { DoubleSide, PointLightHelper } from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 
 // Loading
 const textureLoader = new THREE.TextureLoader()
-const texture = textureLoader.load('/textures/space.jpg')
+const texture = textureLoader.load('/textures/vape.jpg')
 // const normalTexture = textureLoader.load('/textures/MarsNormalMap.png')
+
 
 // Debug
 const gui = new dat.GUI()
 // dat.GUI.toggleHide();
+
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
-scene.background = texture
+// scene.background = texture
+
+
+// GLTF Loader
+const gltfLoader = new GLTFLoader()
+gltfLoader.load('/textures/chairs.gltf', (gltf) => {
+
+    // display shadow for gltf model
+    gltf.scene.traverse(function(node){         
+        if(node.isMesh) { 
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+    })
+
+    scene.add(gltf.scene)
+
+    // const chair = gui.addFolder('Chairs position')
+    // chair.add(gltf.scene.rotation, 'x').min(0).max(9).step(0.01)
+    // chair.add(gltf.scene.rotation, 'y').min(0).max(9).step(0.01)
+    // chair.add(gltf.scene.rotation, 'z').min(0).max(9).step(0.01)
+    // chair.add(gltf.scene.position, 'x').min(0).max(9).step(0.01)
+    // chair.add(gltf.scene.position, 'y').min(-1.11).max(9).step(0.01)
+    // chair.add(gltf.scene.position, 'z').min(-10).max(9).step(0.01)
+
+    gltf.scene.rotation.set(0,2,0)
+    gltf.scene.position.set(0,-1.11,-1.53)
+})
 
 // Objects
 const geometry = new THREE.SphereGeometry( 50, 64, 32 );
 const boxGeometry = new THREE.BoxGeometry( 7, 1, 20 );
 
 // Materials
-
 const material = new THREE.MeshPhongMaterial()
 material.color = new THREE.Color(0xFF162F)
 material.flatShading = true
@@ -42,10 +71,13 @@ const sphere = new THREE.Mesh(geometry,material)
 const box = new THREE.Mesh(boxGeometry, dockMaterial)
 scene.add(sphere, box)
 
-// Position
+// Mesh positioning
 sphere.position.set(0, 2, -120)
 box.position.set(0, -1.6, 2)
 
+// Mesh shadow collisions
+box.castShadow = true
+box.receiveShadow = true
 
 
 // Lights
@@ -54,9 +86,10 @@ pointLight.position.set(2, 3, 4)
 scene.add(pointLight)
 
 // Light 2
-const pointLight2 = new THREE.PointLight(0xFF165C, 12.75)
-pointLight2.position.set(.32, .23, -10)
+const pointLight2 = new THREE.PointLight(0xFF165C, 8.03)
+pointLight2.position.set(.32, .23, -2.98)
 scene.add(pointLight2)
+pointLight2.castShadow = true
 
 const light2 = gui.addFolder('Light 2')
 
@@ -76,23 +109,23 @@ light2.addColor(light2Color, 'color')
 // scene.add(pointLight2Helper)
 
 // Light 3
-// const pointLight3 = new THREE.PointLight(0xFF165C, 12.75)
-// pointLight3.position.set(.32, .23, -10)
-// scene.add(pointLight3)
+const pointLight3 = new THREE.PointLight(0x57ABE8, 8.25)
+pointLight3.position.set(.32, .23, 50)
+scene.add(pointLight3)
 
-// const light3 = gui.addFolder('Light 3')
+const light3 = gui.addFolder('Light 3')
 
-// light3.add(pointLight3.position, 'y').min(-30).max(60).step(0.01)
-// light3.add(pointLight3.position, 'x').min(-30).max(30).step(0.01)
-// light3.add(pointLight3.position, 'z').min(-150).max(50).step(0.01)
-// light3.add(pointLight3, 'intensity').min(0).max(20).step(0.01)
+light3.add(pointLight3.position, 'y').min(-30).max(60).step(0.01)
+light3.add(pointLight3.position, 'x').min(-30).max(30).step(0.01)
+light3.add(pointLight3.position, 'z').min(-150).max(50).step(0.01)
+light3.add(pointLight3, 'intensity').min(0).max(20).step(0.01)
 
-// const light3Color = { color : 0xFF165C }
+const light3Color = { color : 0x57ABE8 }
 
-// light3.addColor(light3Color, 'color')
-//     .onChange(() => {
-//         pointLight3.color.set(light3Color.color)
-//     })
+light3.addColor(light3Color, 'color')
+    .onChange(() => {
+        pointLight3.color.set(light3Color.color)
+    })
 
 // const pointLight3Helper = new THREE.PointLightHelper(pointLight3)
 // scene.add(pointLight3Helper)
@@ -143,7 +176,7 @@ controls.enableDamping = true
  */
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
-    // alpha: true //supprime le background 
+    alpha: true //supprime le background 
 })
 renderer.shadowMap.enabled = true // turn on shadows in the renderer
 renderer.setSize(sizes.width, sizes.height)
