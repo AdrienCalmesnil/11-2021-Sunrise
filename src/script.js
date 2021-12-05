@@ -9,7 +9,6 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 // Loading
 const textureLoader = new THREE.TextureLoader()
 const texture = textureLoader.load('/textures/vape.jpg')
-// const normalTexture = textureLoader.load('/textures/MarsNormalMap.png')
 
 
 // Debug
@@ -47,7 +46,7 @@ gltfLoader.load('/textures/chairs.gltf', (gltf) => {
     // chair.add(gltf.scene.position, 'y').min(-1.11).max(9).step(0.01)
     // chair.add(gltf.scene.position, 'z').min(-10).max(9).step(0.01)
 
-    gltf.scene.rotation.set(0,2,0)
+    gltf.scene.rotation.set(0,1.53,0)
     gltf.scene.position.set(0,-1.11,-1.53)
 })
 
@@ -87,7 +86,7 @@ scene.add(pointLight)
 
 // Light 2
 const pointLight2 = new THREE.PointLight(0xFF165C, 8.03)
-pointLight2.position.set(.32, .23, -2.98)
+pointLight2.position.set(0, .23, -2.98)
 scene.add(pointLight2)
 pointLight2.castShadow = true
 
@@ -109,7 +108,7 @@ light2.addColor(light2Color, 'color')
 // scene.add(pointLight2Helper)
 
 // Light 3
-const pointLight3 = new THREE.PointLight(0x57ABE8, 8.25)
+const pointLight3 = new THREE.PointLight(0x57ABE8, 11)
 pointLight3.position.set(.32, .23, 50)
 scene.add(pointLight3)
 
@@ -168,8 +167,8 @@ const camera1 = gui.addFolder('Camera 1')
 camera1.add(camera.position, 'z').min(2).max(10).step(0.5)
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+// const controls = new OrbitControls(camera, canvas)
+// controls.enableDamping = true
 
 /**
  * Renderer
@@ -232,7 +231,7 @@ const tick = () =>
     sphere.rotation.x += .5 * (targetY - sphere.rotation.x)
 
     // Update Orbital Controls -> controle de la scène
-    controls.update()
+    // controls.update()
 
     // Render
     renderer.render(scene, camera)
